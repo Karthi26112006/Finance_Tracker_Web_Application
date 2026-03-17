@@ -23,3 +23,9 @@ Database Connector: mysql-connector-python for executing SQL commands directly f
 
 ## Project Architecture
 The application follows a RESTful design where the Flask backend serves as an API layer. When a user logs in, the system verifies their credentials and then creates or loads a specific table for the chosen month. This approach demonstrates advanced SQL handling by managing multiple tables dynamically rather than using a single bloated table.
+
+## Floder Name Add Files
+Name : templates
+Add Files : 1 - index.html ,2 - login.html ,3 - register.html
+Name : static
+Add Files : 1 - script.js ,2 - style.css
