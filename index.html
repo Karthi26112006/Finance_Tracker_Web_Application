@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker Dashboard</title>
+    <!-- Use Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation & Filters -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-wallet"></i>
+                <h2>Finance<span>Track</span></h2>
+            </div>
+
+            <div class="table-loader-section">
+                <h3><i class="fa-solid fa-calendar-days"></i> Active Data</h3>
+                <div class="input-group">
+                    <label>Month & Year <span>(MM_YYYY)</span></label>
+                    <input type="text" id="monthYearInput" placeholder="e.g. 05_2024">
+                </div>
+                <button id="loadTableBtn" class="btn-primary">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Load Data
+                </button>
+                <div id="activeTableStatus" class="status-badge hidden">
+                    <i class="fa-solid fa-check-circle"></i> <span>Loaded</span>
+                </div>
+            </div>
+
+            <div class="add-transaction-section">
+                <h3><i class="fa-solid fa-plus-circle"></i> New Transaction</h3>
+                <form id="transactionForm">
+                    <input type="hidden" id="transId">
+                    
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="transDate" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="transCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Food">Food</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Description</label>
+                        <input type="text" id="transDesc" placeholder="What was this for?" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Amount (₹)</label>
+                        <small class="hint">Positive = Income, Negative = Expense</small>
+                        <input type="number" id="transAmount" placeholder="e.g. 500 or -200" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="saveBtn" class="btn-primary w-full">Add Transaction</button>
+                        <button type="button" id="cancelBtn" class="btn-secondary w-full hidden">Cancel Edit</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>Welcome back, <strong>{{ username }}</strong>! 👋</p>
+                <a href="{{ url_for('logout') }}" class="btn-secondary w-full" style="margin-top: 1rem; text-decoration: none;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Dashboard Widgets -->
+            <header class="dashboard-header">
+                <div class="widget income">
+                    <div class="widget-icon">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <div class="widget-info">
+                        <p>Total Income</p>
+                        <h2 id="sumIncome">₹0</h2>
+                    </div>
+                </div>
+
+                <div class="widget expense">
+                    <div class="widget-icon">
+                        <i class="fa-solid fa-arrow-trend-down"></i>
+                    </div>
+                    <div class="widget-info">
+                        <p>Total Expense</p>
+                        <h2 id="sumExpense">₹0</h2>
+                    </div>
+                </div>
+
+                <div class="widget balance">
+                    <div class="widget-icon">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <div class="widget-info">
+                        <p>Current Balance</p>
+                        <h2 id="sumBalance">₹0</h2>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Transactions Table -->
+            <section class="table-section">
+                <div class="section-header">
+                    <h2>Recent Transactions</h2>
+                    <div id="tableSpinner" class="spinner hidden"></div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="transactionsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <i class="fa-regular fa-folder-open"></i>
+                                    <p>Please load a month & year to view transactions.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="toastMsg">Message</span>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
