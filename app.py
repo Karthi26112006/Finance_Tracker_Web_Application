@@ -13,7 +13,7 @@ def get_db_connection():
     db = mysql.connector.connect(
         host="localhost",
         username="root",
-        password="K@rthip0" # Original password from source
+        password="........" # Original password from source
     )
     cursor = db.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS project2")
