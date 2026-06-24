@@ -5,19 +5,24 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
-# Secure random key for session management
-app.secret_key = os.urandom(24)
+# Secret key for session management (set in Vercel env vars as SECRET_KEY)
+app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(24)
 
 # Database configuration helper
 def get_db_connection():
+    db_host = os.environ.get('DB_HOST', 'localhost')
+    db_user = os.environ.get('DB_USER', 'root')
+    db_password = os.environ.get('DB_PASSWORD', '........')
+    db_name = os.environ.get('DB_NAME', 'project2')
+
     db = mysql.connector.connect(
-        host="localhost",
-        username="root",
-        password="........" # Original password from source
+        host=db_host,
+        user=db_user,
+        password=db_password
     )
     cursor = db.cursor()
-    cursor.execute("CREATE DATABASE IF NOT EXISTS project2")
-    cursor.execute("USE project2")
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{db_name}`")
+    cursor.execute(f"USE `{db_name}`")
     
     # Ensure users table exists for authentication
     cursor.execute("""
